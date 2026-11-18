@@ -134,6 +134,30 @@ if SERVER then
     Player_meta.setFaction = Player_meta.SetFaction
     Player_meta.getFaction = Player_meta.GetFaction
 
+    -- Додавання методів у базову метатаблицю Entity та NextBot для повної сумісності
+    local Entity_meta = FindMetaTable("Entity")
+    local NextBot_meta = FindMetaTable("NextBot")
+
+    function Entity_meta:SetFaction(faction)
+        if not IsValid(self) then return end
+        SetFaction(self, faction)
+    end
+
+    function Entity_meta:GetFaction()
+        if not IsValid(self) then return nil end
+        return GetFaction(self)
+    end
+
+    Entity_meta.setFaction = Entity_meta.SetFaction
+    Entity_meta.getFaction = Entity_meta.GetFaction
+
+    if NextBot_meta then
+        NextBot_meta.SetFaction = Entity_meta.SetFaction
+        NextBot_meta.GetFaction = Entity_meta.GetFaction
+        NextBot_meta.setFaction = Entity_meta.SetFaction
+        NextBot_meta.getFaction = Entity_meta.GetFaction
+    end
+
 -----------------------------------------------------------------------------------
     -- Команди консолі для роботи з Faction
     concommand.Add("set_faction", function(player, cmd, args)
